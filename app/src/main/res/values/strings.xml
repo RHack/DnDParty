@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">RPG Party</string>
+
+    <!--Login activity-->
+    <string name="login_title">Login</string>
+    <string name="username_label">Username</string>
+    <string name="player_btn_label">Player</string>
+    <string name="dm_btn_label">Dungeon Master</string>
+    <!--old-->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="guest_login">Continue as Guest</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="blank"> </string>
+
+    <!--Character List activity-->
+    <string name="character_list_title">Character List</string>
+    <string name="add_character_tv">Add Character</string>
+
+    <!--Character Creator activity-->
+    <string name="character_creator_title">Character Creator</string>
+    <string name="character_name_label">Character Name</string>
+    <string name="character_player_label">Player Name</string>
+    <string name="character_class_label">Class</string>
+    <string name="character_race_label">Race</string>
+    <string name="character_alignment_label">Alignment</string>
+    <string name="character_proficiency_bonus_label">Proficiency\nBonus</string>
+    <string name="character_ability_scores_label">Ability Scores</string>
+    <string name="modifier_default">(+0)</string>
+    <string name="skill_modifier_default">0</string>
+    <string name="character_max_hit_points_label">Max Hit Points</string>
+    <string name="character_armor_class_label">Armor Class</string>
+    <string name="character_speed_label">Speed</string>
+    <string name="character_max_hit_dice_label">Max Hit Dice</string>
+    <string name="character_hit_die_label">d</string>
+    <string name="hit_die_example">ex: 3d6 (3 x 6 sided dice)</string>
+    <string name="character_proficient_skills_label">Skills</string>
+    <string name="character_proficient_saving_throws_label">Saving Throws</string>
+    <string name="create_character_button">Create</string>
+
+    <!--Alignments-->
+    <string name="alignment_lawful_good">Lawful Good</string>
+    <string name="alignment_neutral_good">Neutral Good</string>
+    <string name="alignment_chaotic_good">Chaotic Good</string>
+    <string name="alignment_lawful_neutral">Lawful Neutral</string>
+    <string name="alignment_neutral">Neutral</string>
+    <string name="alignment_chaotic_neutral">Chaotic Neutral</string>
+    <string name="alignment_lawful_evil">Lawful Evil</string>
+    <string name="alignment_neutral_evil">Neutral Evil</string>
+    <string name="alignment_chaotic_evil">Chaotic Evil</string>
+
+    <!--Skills-->
+    <string name="skill_acrobatics">Acrobatics</string>
+    <string name="skill_animal_handling">Animal Handling</string>
+    <string name="skill_arcana">Arcana</string>
+    <string name="skill_athletics">Athletics</string>
+    <string name="skill_deception">Deception</string>
+    <string name="skill_history">History</string>
+    <string name="skill_insight">Insight</string>
+    <string name="skill_intimidation">Intimidation</string>
+    <string name="skill_investigation">Investigation</string>
+    <string name="skill_medicine">Medicine</string>
+    <string name="skill_nature">Nature</string>
+    <string name="skill_perception">Perception</string>
+    <string name="skill_performance">Performance</string>
+    <string name="skill_persuasion">Persuasion</string>
+    <string name="skill_religion">Religion</string>
+    <string name="skill_sleight_of_hand">Sleight of Hand</string>
+    <string name="skill_stealth">Stealth</string>
+    <string name="skill_survival">Survival</string>
+
+    <!--Ability Scores-->
+    <string name="ability_strength">Strength</string>
+    <string name="ability_dexterity">Dexterity</string>
+    <string name="ability_constitution">Constitution</string>
+    <string name="ability_intelligence">Intelligence</string>
+    <string name="ability_wisdom">Wisdom</string>
+    <string name="ability_charisma">Charisma</string>
+
+    <!--Alignments array-->
+    <string-array name="alignments">
+        <item>Lawful Good</item>
+        <item>Neutral Good</item>
+        <item>Chaotic Good</item>
+        <item>Lawful Neutral</item>
+        <item>Neutral</item>
+        <item>Chaotic Neutral</item>
+        <item>Lawful Evil</item>
+        <item>Neutral Evil</item>
+        <item>Chaotic Evil</item>
+    </string-array>
+
+</resources>
