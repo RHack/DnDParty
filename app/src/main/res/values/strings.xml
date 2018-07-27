@@ -6,6 +6,7 @@
     <string name="username_label">Username</string>
     <string name="player_btn_label">Player</string>
     <string name="dm_btn_label">Dungeon Master</string>
+
     <!--old-->
     <string name="login">Login</string>
     <string name="register">Register</string>
