@@ -1,4 +1,4 @@
-package com.example.robhackemack.rpgparty
+package com.example.robhackemack.dndparty
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity

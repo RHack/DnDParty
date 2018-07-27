@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RPG Party</string>
+    <string name="app_name">DnD Party</string>
 
     <!--Login activity-->
     <string name="login_title">Login</string>

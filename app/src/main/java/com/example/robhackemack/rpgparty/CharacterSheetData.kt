@@ -1,4 +1,4 @@
-package com.example.robhackemack.rpgparty
+package com.example.robhackemack.dndparty
 
 import android.os.Parcel
 import android.os.Parcelable

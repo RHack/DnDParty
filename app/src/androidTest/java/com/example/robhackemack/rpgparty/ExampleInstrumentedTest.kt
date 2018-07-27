@@ -1,4 +1,4 @@
-package com.example.robhackemack.rpgparty
+package com.example.robhackemack.dndparty
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.example.robhackemack.rpgparty", appContext.packageName)
+        assertEquals("com.example.robhackemack.dndparty", appContext.packageName)
     }
 }
