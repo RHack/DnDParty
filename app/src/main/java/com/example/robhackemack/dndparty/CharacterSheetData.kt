@@ -5,33 +5,33 @@ import android.os.Parcelable
 import org.json.JSONObject
 
 
-data class CharacterSheetData(val charName: String, val charPlayer: String? = null, val charClass: String? = null, val charRace: String? = null,
-                              val charAlignment: String? = null, val charStr: Int? = null, val charDex: Int? = null,
-                              val charCon: Int? = null, val charInt: Int? = null, val charWis: Int? = null,
-                              val charCha: Int? = null, val charMaxHP: Int? = null, val charAC: Int? = null,
-                              val charSpeed: Int? = null, val charMaxHitDice: Int? = null, val charHitDie: Int? = null,
-                              val charProficiencyBonus: Int? = null, val charTrainedSkills: Unit? = null,
-                              val charSavingThrows: Unit? = null, var charHP: Int? = null, var charTempHP: Int? = null,
-                              var charInitiative: Int? = null, val charHitDice: Int? = null) : JSONObject() {
+data class CharacterSheetData(val charName: String, val charPlayer: String? = null, var charClass: String? = null, var charRace: String? = null,
+                              var charSpeed: Int? = null, var charAlignment: String? = null, var charProficiencyBonus: Int? = null, var charStr: Int? = null, var charDex: Int? = null,
+                              var charCon: Int? = null, var charInt: Int? = null, var charWis: Int? = null,
+                              var charCha: Int? = null, var charMaxHP: Int? = null, var charAC: Int? = null,
+                              var charMaxHitDice: Int? = null, var charHitDie: Int? = null,
+                              var charTrainedSkills: MutableList<String>? = null,
+                              var charSavingThrows: MutableList<String>? = null, var charHP: Int? = null, var charTempHP: Int? = null,
+                              var charInitiative: Int? = null, var charHitDice: Int? = null) : JSONObject() {
     val name = charName
     val player = charPlayer
-    val characterClass = charClass
-    val race = charRace
-    val alignment = charAlignment
-    val strength = charStr
-    val dexterity = charDex
-    val constitution = charCon
-    val intelligence = charInt
-    val wisdom = charWis
-    val charisma = charCha
-    val maxHitPoints = charMaxHP
-    val armorClass = charAC
-    val speed = charSpeed
-    val maxHitDice = charMaxHitDice
-    val hitDie = charHitDie
-    val proficiencyBonus = charProficiencyBonus
-    val trainedSkills = charTrainedSkills
-    val savingThrows = charSavingThrows
+    var characterClass = charClass
+    var race = charRace
+    var speed = charSpeed
+    var alignment = charAlignment
+    var proficiencyBonus = charProficiencyBonus
+    var strength = charStr
+    var dexterity = charDex
+    var constitution = charCon
+    var intelligence = charInt
+    var wisdom = charWis
+    var charisma = charCha
+    var maxHitPoints = charMaxHP
+    var armorClass = charAC
+    var maxHitDice = charMaxHitDice
+    var hitDie = charHitDie
+    var trainedSkills = charTrainedSkills
+    var savingThrows = charSavingThrows
     var hitPoints = charHP
     var temporaryHitPoints = charTempHP
     var initiative = charInitiative
