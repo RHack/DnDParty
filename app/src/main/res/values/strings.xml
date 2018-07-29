@@ -31,7 +31,7 @@
     <string name="character_proficiency_bonus_label">Proficiency\nBonus</string>
     <string name="character_ability_scores_label">Ability Scores</string>
     <string name="modifier_default">(+0)</string>
-    <string name="skill_modifier_default">0</string>
+    <string name="skill_modifier_default">+0</string>
     <string name="character_max_hit_points_label">Max Hit Points</string>
     <string name="character_armor_class_label">Armor Class</string>
     <string name="character_speed_label">Speed</string>

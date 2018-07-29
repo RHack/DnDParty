@@ -623,7 +623,6 @@
                 <CheckBox
                     android:id="@+id/acrobatics_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/acrobatics_modifier_et"
@@ -651,7 +650,6 @@
                 <CheckBox
                     android:id="@+id/arcana_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/arcana_modifier_et"
@@ -679,7 +677,6 @@
                 <CheckBox
                     android:id="@+id/deception_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/deception_modifier_et"
@@ -707,7 +704,6 @@
                 <CheckBox
                     android:id="@+id/insight_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/insight_modifier_et"
@@ -736,7 +732,6 @@
                 <CheckBox
                     android:id="@+id/investigation_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/investigation_modifier_et"
@@ -765,7 +760,6 @@
                 <CheckBox
                     android:id="@+id/nature_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/nature_modifier_et"
@@ -794,7 +788,6 @@
                 <CheckBox
                     android:id="@+id/performance_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/performance_modifier_et"
@@ -823,7 +816,6 @@
                 <CheckBox
                     android:id="@+id/religion_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/religion_modifier_et"
@@ -852,7 +844,6 @@
                 <CheckBox
                     android:id="@+id/stealth_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/stealth_modifier_et"
@@ -889,7 +880,6 @@
                 <CheckBox
                     android:id="@+id/animal_handling_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/animal_handling_modifier_et"
@@ -919,7 +909,6 @@
                 <CheckBox
                     android:id="@+id/athletics_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/athletics_modifier_et"
@@ -948,7 +937,6 @@
                 <CheckBox
                     android:id="@+id/history_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/history_modifier_et"
@@ -978,7 +966,6 @@
                 <CheckBox
                     android:id="@+id/intimidation_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/intimidation_modifier_et"
@@ -1008,7 +995,6 @@
                 <CheckBox
                     android:id="@+id/medicine_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/medicine_modifier_et"
@@ -1037,7 +1023,6 @@
                 <CheckBox
                     android:id="@+id/perception_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/perception_modifier_et"
@@ -1066,7 +1051,6 @@
                 <CheckBox
                     android:id="@+id/persuasion_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/persuasion_modifier_et"
@@ -1095,7 +1079,6 @@
                 <CheckBox
                     android:id="@+id/sleight_of_hand_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/sleight_of_hand_modifier_et"
@@ -1124,7 +1107,6 @@
                 <CheckBox
                     android:id="@+id/survival_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/survival_modifier_et"
@@ -1177,7 +1159,6 @@
                 <CheckBox
                     android:id="@+id/strength_save_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/strength_save_modifier_et"
@@ -1206,7 +1187,6 @@
                 <CheckBox
                     android:id="@+id/constitution_save_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/constitution_save_modifier_et"
@@ -1235,7 +1215,6 @@
                 <CheckBox
                     android:id="@+id/wisdom_save_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/wisdom_save_modifier_et"
@@ -1268,7 +1247,6 @@
                 <CheckBox
                     android:id="@+id/dexterity_save_trained_cb"
                     android:text=""
-                    android:onClick="onCheckboxClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="@id/dexterity_save_modifier_et"
@@ -1299,7 +1277,6 @@
             <CheckBox
                 android:id="@+id/intelligence_save_trained_cb"
                 android:text=""
-                android:onClick="onCheckboxClicked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/intelligence_save_modifier_et"
@@ -1328,7 +1305,6 @@
             <CheckBox
                 android:id="@+id/charisma_save_trained_cb"
                 android:text=""
-                android:onClick="onCheckboxClicked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/charisma_save_modifier_et"
