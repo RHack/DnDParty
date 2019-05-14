@@ -10,8 +10,8 @@ data class CharacterSheetData(val charName: String, val charPlayer: String? = nu
                               var charCon: Int? = null, var charInt: Int? = null, var charWis: Int? = null,
                               var charCha: Int? = null, var charMaxHP: Int? = null, var charAC: Int? = null,
                               var charMaxHitDice: Int? = null, var charHitDie: Int? = null,
-                              var charTrainedSkills: MutableList<String>? = null,
-                              var charSavingThrows: MutableList<String>? = null, var charHP: Int? = null, var charTempHP: Int? = null,
+                              var charTrainedSkills: MutableList<String?>? = null,
+                              var charSavingThrows: MutableList<String?>? = null, var charHP: Int? = null, var charTempHP: Int? = null,
                               var charInitiative: Int? = null, var charHitDice: Int? = null) : JSONObject() {
     val name = charName
     val player = charPlayer

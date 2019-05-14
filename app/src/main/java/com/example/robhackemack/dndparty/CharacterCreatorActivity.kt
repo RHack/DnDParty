@@ -7,8 +7,10 @@ import android.os.Parcel
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_character_creator.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.Serializable
@@ -97,6 +99,8 @@ class CharacterCreatorActivity : AppCompatActivity() {
         val persuasionEt = findViewById<EditText>(R.id.persuasion_modifier_et)
         val persuasionCb = findViewById<CheckBox>(R.id.persuasion_trained_cb)
 
+        var trainedSkills = MutableList<TextView?>(0) {null}
+
         val maxHitPointsEt = findViewById<EditText>(R.id.max_hit_points_et)
         val maxHitDiceEt = findViewById<EditText>(R.id.max_hit_dice_et)
         val hitDieEt = findViewById<EditText>(R.id.hit_die_et)
@@ -135,19 +139,37 @@ class CharacterCreatorActivity : AppCompatActivity() {
         }
         
         fun signModifier(proficiencyModifier: Int) : String {
-            if(proficiencyModifier < 0) {
+            if (proficiencyModifier < 0) {
                 return "$proficiencyModifier"
             } else {
                 return "+$proficiencyModifier"
             }
         }
 
-        fun checkedBox(proficiencyModifier: EditText, proficient: Boolean) {
+        fun trainSkill(skill: TextView?) {
+            if (!trainedSkills.contains(skill)) {
+                trainedSkills.add(skill)
+            } else {
+                Log.e("Skill Train Error", "Skill already trained")
+            }
+        }
+
+        fun untrainSkill(skill: TextView?) {
+            if (trainedSkills.contains(skill)) {
+                trainedSkills.add(skill)
+            } else {
+                Log.e("Skill Train Error", "Skill not trained yet")
+            }
+        }
+
+        fun checkedBox(proficiencyModifier: EditText, proficient: Boolean, skill: TextView? = null) {
             var proficiencyModifierNew = proficiencyModifier.text.toString().toInt()
-            if(proficient) {
+            if (proficient) {
                 proficiencyModifierNew += 2
+                skill ?: trainSkill(skill)
             } else {
                 proficiencyModifierNew -= 2
+                skill ?: untrainSkill(skill)
             }
             proficiencyModifier.setText(signModifier(proficiencyModifierNew))
         }
@@ -232,39 +254,39 @@ class CharacterCreatorActivity : AppCompatActivity() {
         }
 
         strengthEt.afterTextChanged{updateModifier(strengthEt)}
-        athleticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(athleticsEt, isChecked)}
+        athleticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(athleticsEt, isChecked, athletics_tv)}
         strengthSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(strengthSaveEt, isChecked)}
 
         dexterityEt.afterTextChanged{updateModifier(dexterityEt)}
-        acrobaticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(acrobaticsEt, isChecked)}
-        sleightOfHandCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(sleightOfHandEt, isChecked)}
-        stealthCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(stealthEt, isChecked)}
+        acrobaticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(acrobaticsEt, isChecked, acrobatics_tv)}
+        sleightOfHandCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(sleightOfHandEt, isChecked, sleight_of_hand_tv)}
+        stealthCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(stealthEt, isChecked, stealth_tv)}
         dexteritySaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(dexteritySaveEt, isChecked)}
 
         constitutionEt.afterTextChanged{updateModifier(constitutionEt)}
         constitutionSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(constitutionSaveEt, isChecked)}
 
         intelligenceEt.afterTextChanged{updateModifier(intelligenceEt)}
-        arcanaCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(arcanaEt, isChecked)}
-        historyCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(historyEt, isChecked)}
-        investigationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(investigationEt, isChecked)}
-        natureCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(natureEt, isChecked)}
-        religionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(religionEt, isChecked)}
+        arcanaCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(arcanaEt, isChecked, arcana_tv)}
+        historyCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(historyEt, isChecked, history_tv)}
+        investigationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(investigationEt, isChecked, investigation_tv)}
+        natureCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(natureEt, isChecked, nature_tv)}
+        religionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(religionEt, isChecked, religion_tv)}
         intelligenceSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(intelligenceSaveEt, isChecked)}
 
         wisdomEt.afterTextChanged{updateModifier(wisdomEt)}
-        animalHandlingCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(animalHandlingEt, isChecked)}
-        insightCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(insightEt, isChecked)}
-        medicineCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(medicineEt, isChecked)}
-        perceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(perceptionEt, isChecked)}
-        survivalCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(survivalEt, isChecked)}
+        animalHandlingCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(animalHandlingEt, isChecked, animal_handling_tv)}
+        insightCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(insightEt, isChecked, insight_tv)}
+        medicineCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(medicineEt, isChecked, medicine_tv)}
+        perceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(perceptionEt, isChecked, perception_tv)}
+        survivalCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(survivalEt, isChecked, survival_tv)}
         wisdomSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(wisdomSaveEt, isChecked)}
 
         charismaEt.afterTextChanged{updateModifier(charismaEt)}
-        deceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(deceptionEt, isChecked)}
-        intimidationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(intimidationEt, isChecked)}
-        performanceCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(performanceEt, isChecked)}
-        persuasionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(persuasionEt, isChecked)}
+        deceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(deceptionEt, isChecked, deception_tv)}
+        intimidationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(intimidationEt, isChecked, intimidation_tv)}
+        performanceCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(performanceEt, isChecked, performance_tv)}
+        persuasionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(persuasionEt, isChecked, persuasion_tv)}
         charismaSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked)}
 
         fun numberFormatCheck(editText: EditText): Int? {
@@ -273,6 +295,16 @@ class CharacterCreatorActivity : AppCompatActivity() {
             } else {
                 return editText.text.toString().toInt()
             }
+        }
+
+        fun skillListCheck(skillList: MutableList<TextView?>) : MutableList<String?> {
+            var skillStringList = MutableList<String?>(0, {null})
+
+            for (skill in skillList) {
+                skillStringList.add(skill?.text.toString())
+            }
+
+            return skillStringList
         }
 
         createBtn.setOnClickListener {
@@ -292,13 +324,14 @@ class CharacterCreatorActivity : AppCompatActivity() {
             val characterMaxHitDice = numberFormatCheck(maxHitDiceEt)
             val characterHitDie = numberFormatCheck(hitDieEt)
             val characterArmorClass = numberFormatCheck(armorClassEt)
+            var trainedSkills : MutableList<String?> = skillListCheck(trainedSkills)
 
             val newCharacter = CharacterSheetData(characterName, characterPlayer, characterClass,
                     characterRace, characterSpeed, selectedAlignment, characterProficiencyBonus,
                     characterStrength, characterDexterity, characterConstitution,
                     characterIntelligence, characterWisdom, characterCharisma,
                     characterMaxHitPoints, characterMaxHitDice, characterHitDie,
-                    characterArmorClass)
+                    characterArmorClass, trainedSkills)
             createCharacterFile(newCharacter)
             intent = Intent(this, CharacterListActivity::class.java)
             startActivity(intent)
@@ -306,13 +339,24 @@ class CharacterCreatorActivity : AppCompatActivity() {
     }
 
     fun createCharacterFile(characterInfo: CharacterSheetData) {
-        val characterDirectory = getDir("Characters", 0)
+        val filename = characterInfo.name
         val characterName = characterInfo.name
-        val characterFile = File(characterDirectory, characterInfo.name)
-        var characterContent = ""
-        characterContent += "name:$characterName"
-        var characterStream = FileOutputStream(characterFile, true)
-        characterStream.write(characterContent.toByteArray())
+        val fileContents = "name:$characterName"
+        this.openFileOutput(filename, Context.MODE_PRIVATE).use {
+            it.write(fileContents.toByteArray())
+        }
+
+//        val characterFileName = characterInfo.name + ".txt"
+//        val characterDirectory = File("/Characters/")
+//        characterDirectory.mkdirs()
+
+//        val characterDirectory = getDir("Characters", 0)
+//        val characterName = characterInfo.name
+//        val characterFile = File(characterDirectory, characterInfo.name)
+//        var characterContent = ""
+//        characterContent = "name:$characterName"
+//        var characterStream = FileOutputStream(characterFile, true)
+//        characterStream.write(characterContent.toByteArray())
     }
 
 }
