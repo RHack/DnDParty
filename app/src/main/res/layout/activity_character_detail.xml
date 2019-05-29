@@ -146,7 +146,7 @@
 
         <TextView
             android:id="@+id/max_hit_points_tv"
-            android:text="Hit Points"
+            android:text="@string/character_hit_points_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -167,7 +167,7 @@
             app:layout_constraintEnd_toStartOf="@id/hit_points_tv"/>
         <TextView
             android:id="@+id/hit_points_tv"
-            android:text="@string/character_hit_points_label"
+            android:text="@string/character_hit_points_slash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/max_hit_points_tv"

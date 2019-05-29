@@ -1,9 +1,6 @@
 package com.example.robhackemack.dndparty
 
-import android.os.Parcel
-import android.os.Parcelable
-import org.json.JSONObject
-
+import java.io.Serializable
 
 data class CharacterSheetData(val charName: String, val charPlayer: String? = null, var charClass: String? = null, var charRace: String? = null,
                               var charSpeed: Int? = null, var charAlignment: String? = null, var charProficiencyBonus: Int? = null, var charStr: Int? = null, var charDex: Int? = null,
@@ -12,7 +9,7 @@ data class CharacterSheetData(val charName: String, val charPlayer: String? = nu
                               var charMaxHitDice: Int? = null, var charHitDie: Int? = null,
                               var charTrainedSkills: MutableList<String?>? = null,
                               var charSavingThrows: MutableList<String?>? = null, var charHP: Int? = null, var charTempHP: Int? = null,
-                              var charInitiative: Int? = null, var charHitDice: Int? = null) : JSONObject() {
+                              var charInitiative: Int? = null, var charHitDice: Int? = null) : Serializable {
     val name = charName
     val player = charPlayer
     var characterClass = charClass
@@ -36,62 +33,4 @@ data class CharacterSheetData(val charName: String, val charPlayer: String? = nu
     var temporaryHitPoints = charTempHP
     var initiative = charInitiative
     var hitDice = charHitDice
-
-//    constructor(parcel: Parcel?) : this(parcel?.readString(), parcel?.readString(),
-//            parcel?.readString(), parcel?.readString(), parcel?.readInt(), parcel?.readInt(),
-//            parcel?.readInt(), parcel?.readInt(), parcel?.readInt(), parcel?.readInt(),
-//            parcel?.readInt(), parcel?.readInt(), parcel?.readInt(), parcel?.readInt(),
-//            parcel?.readInt(), parcel?.readInt(), parcel?.readStringList(null),
-//            parcel?.readStringList(null), parcel?.readInt(), parcel?.readInt(), parcel?.readInt(),
-//            parcel?.readInt())
-
-//    override fun writeToParcel(parcel: Parcel, flags: Int) {
-//        parcel.writeString(name)
-//        parcel.writeString(characterClass)
-//        parcel.writeString(race)
-//        parcel.writeString(alignment)
-//        writeNullableInt(parcel, strength)
-//        writeNullableInt(parcel, dexterity)
-//        writeNullableInt(parcel, constitution)
-//        writeNullableInt(parcel, intelligence)
-//        writeNullableInt(parcel, wisdom)
-//        writeNullableInt(parcel, charisma)
-//        writeNullableInt(parcel, maxHitPoints)
-//        writeNullableInt(parcel, armorClass)
-//        writeNullableInt(parcel, speed)
-//        writeNullableInt(parcel, maxHitDice)
-//        writeNullableInt(parcel, hitDie)
-//        writeNullableInt(parcel, proficiencyBonus)
-//        parcel.writeStringList(trainedSkills)
-//        parcel.writeStringList(savingThrows)
-//        writeNullableInt(parcel, hitPoints)
-//        writeNullableInt(parcel, temporaryHitPoints)
-//        writeNullableInt(parcel, initiative)
-//        writeNullableInt(parcel, hitDice)
-//
-//    }
-
-//    fun writeNullableInt(parcel: Parcel, nullableInt: Int?) {
-//        if (nullableInt != null) {
-//            parcel.writeInt(nullableInt)
-//        }
-//    }
-//
-//    override fun describeContents(): Int {
-//        return 0
-//    }
-
-//    companion object CREATOR : Parcelable.Creator<CharacterSheetData> {
-//        override fun createFromParcel(parcel: Parcel): CharacterSheetData {
-//            return CharacterSheetData(parcel)
-//        }
-//
-//        override fun newArray(size: Int): Array<CharacterSheetData?> {
-//            return arrayOfNulls(size)
-//        }
-//    }
-//}
-
-//private fun Parcel.writeStringList(trainedSkills: Unit?) {
-
 }

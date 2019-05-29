@@ -1,9 +1,7 @@
 package com.example.robhackemack.dndparty
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,15 +11,16 @@ import android.widget.*
 import kotlinx.android.synthetic.main.activity_character_creator.*
 import java.io.File
 import java.io.FileOutputStream
+import java.io.ObjectOutputStream
 import java.io.Serializable
 
-class CharacterCreatorActivity : AppCompatActivity() {
+class CharacterCreatorActivity : AppCompatActivity(), Serializable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_creator)
 
-        val username : String? = intent.getStringExtra("username")
+        val username: String? = intent.getStringExtra("username")
 
         val nameEt = findViewById<EditText>(R.id.name_et)
         val playerEt = findViewById<EditText>(R.id.player_et)
@@ -99,7 +98,7 @@ class CharacterCreatorActivity : AppCompatActivity() {
         val persuasionEt = findViewById<EditText>(R.id.persuasion_modifier_et)
         val persuasionCb = findViewById<CheckBox>(R.id.persuasion_trained_cb)
 
-        var trainedSkills = MutableList<TextView?>(0) {null}
+        var trainedSkills = MutableList<TextView?>(0) { null }
 
         val maxHitPointsEt = findViewById<EditText>(R.id.max_hit_points_et)
         val maxHitDiceEt = findViewById<EditText>(R.id.max_hit_dice_et)
@@ -110,7 +109,7 @@ class CharacterCreatorActivity : AppCompatActivity() {
 
         playerEt.setText(username, TextView.BufferType.EDITABLE)
 
-        val alignmentAdapter = ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, alignments )
+        val alignmentAdapter = ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, alignments)
         var selectedAlignment: String? = null
         alignmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         alignmentSp.setAdapter(alignmentAdapter)
@@ -137,8 +136,8 @@ class CharacterCreatorActivity : AppCompatActivity() {
                 }
             })
         }
-        
-        fun signModifier(proficiencyModifier: Int) : String {
+
+        fun signModifier(proficiencyModifier: Int): String {
             if (proficiencyModifier < 0) {
                 return "$proficiencyModifier"
             } else {
@@ -174,22 +173,22 @@ class CharacterCreatorActivity : AppCompatActivity() {
             proficiencyModifier.setText(signModifier(proficiencyModifierNew))
         }
 
-        fun calculateAbilityScoreModifier(abilityScore: Int) : Int {
+        fun calculateAbilityScoreModifier(abilityScore: Int): Int {
             return (abilityScore - 10) / 2
         }
 
         fun updateSkillOrSaveModifier(abilityScoreModifierNumber: Int, skillModifier: EditText,
-                                trainedBox: CheckBox) {
+                                      trainedBox: CheckBox) {
             var skillModifierNumber = abilityScoreModifierNumber
 
-            if(trainedBox.isChecked()) {
+            if (trainedBox.isChecked()) {
                 skillModifierNumber += 2
             }
             skillModifier.setText(signModifier(skillModifierNumber))
         }
 
         fun updateAbilityScoreModifier(abilityScoreModifierNumber: Int, abilityScoreModifier: TextView) {
-            if(abilityScoreModifierNumber < 0) {
+            if (abilityScoreModifierNumber < 0) {
                 abilityScoreModifier.text = "( $abilityScoreModifierNumber )"
             } else {
                 abilityScoreModifier.text = "( +$abilityScoreModifierNumber )"
@@ -197,7 +196,7 @@ class CharacterCreatorActivity : AppCompatActivity() {
         }
 
         fun updateModifier(abilityScore: EditText) {
-            val abilityScoreModifierNumber : Int
+            val abilityScoreModifierNumber: Int
 
             if (abilityScore.text.isEmpty()) {
                 abilityScoreModifierNumber = 0
@@ -206,7 +205,7 @@ class CharacterCreatorActivity : AppCompatActivity() {
                         calculateAbilityScoreModifier(abilityScore.text.toString().toInt())
             }
 
-            when(abilityScore) {
+            when (abilityScore) {
                 strengthEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, strengthTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, athleticsEt, athleticsCb)
@@ -253,41 +252,41 @@ class CharacterCreatorActivity : AppCompatActivity() {
             }
         }
 
-        strengthEt.afterTextChanged{updateModifier(strengthEt)}
-        athleticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(athleticsEt, isChecked, athletics_tv)}
-        strengthSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(strengthSaveEt, isChecked)}
+        strengthEt.afterTextChanged { updateModifier(strengthEt) }
+        athleticsCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(athleticsEt, isChecked, athletics_tv) }
+        strengthSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(strengthSaveEt, isChecked) }
 
-        dexterityEt.afterTextChanged{updateModifier(dexterityEt)}
-        acrobaticsCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(acrobaticsEt, isChecked, acrobatics_tv)}
-        sleightOfHandCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(sleightOfHandEt, isChecked, sleight_of_hand_tv)}
-        stealthCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(stealthEt, isChecked, stealth_tv)}
-        dexteritySaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(dexteritySaveEt, isChecked)}
+        dexterityEt.afterTextChanged { updateModifier(dexterityEt) }
+        acrobaticsCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(acrobaticsEt, isChecked, acrobatics_tv) }
+        sleightOfHandCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(sleightOfHandEt, isChecked, sleight_of_hand_tv) }
+        stealthCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(stealthEt, isChecked, stealth_tv) }
+        dexteritySaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(dexteritySaveEt, isChecked) }
 
-        constitutionEt.afterTextChanged{updateModifier(constitutionEt)}
-        constitutionSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(constitutionSaveEt, isChecked)}
+        constitutionEt.afterTextChanged { updateModifier(constitutionEt) }
+        constitutionSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(constitutionSaveEt, isChecked) }
 
-        intelligenceEt.afterTextChanged{updateModifier(intelligenceEt)}
-        arcanaCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(arcanaEt, isChecked, arcana_tv)}
-        historyCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(historyEt, isChecked, history_tv)}
-        investigationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(investigationEt, isChecked, investigation_tv)}
-        natureCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(natureEt, isChecked, nature_tv)}
-        religionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(religionEt, isChecked, religion_tv)}
-        intelligenceSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(intelligenceSaveEt, isChecked)}
+        intelligenceEt.afterTextChanged { updateModifier(intelligenceEt) }
+        arcanaCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(arcanaEt, isChecked, arcana_tv) }
+        historyCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(historyEt, isChecked, history_tv) }
+        investigationCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(investigationEt, isChecked, investigation_tv) }
+        natureCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(natureEt, isChecked, nature_tv) }
+        religionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(religionEt, isChecked, religion_tv) }
+        intelligenceSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(intelligenceSaveEt, isChecked) }
 
-        wisdomEt.afterTextChanged{updateModifier(wisdomEt)}
-        animalHandlingCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(animalHandlingEt, isChecked, animal_handling_tv)}
-        insightCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(insightEt, isChecked, insight_tv)}
-        medicineCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(medicineEt, isChecked, medicine_tv)}
-        perceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(perceptionEt, isChecked, perception_tv)}
-        survivalCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(survivalEt, isChecked, survival_tv)}
-        wisdomSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(wisdomSaveEt, isChecked)}
+        wisdomEt.afterTextChanged { updateModifier(wisdomEt) }
+        animalHandlingCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(animalHandlingEt, isChecked, animal_handling_tv) }
+        insightCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(insightEt, isChecked, insight_tv) }
+        medicineCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(medicineEt, isChecked, medicine_tv) }
+        perceptionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(perceptionEt, isChecked, perception_tv) }
+        survivalCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(survivalEt, isChecked, survival_tv) }
+        wisdomSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(wisdomSaveEt, isChecked) }
 
-        charismaEt.afterTextChanged{updateModifier(charismaEt)}
-        deceptionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(deceptionEt, isChecked, deception_tv)}
-        intimidationCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(intimidationEt, isChecked, intimidation_tv)}
-        performanceCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(performanceEt, isChecked, performance_tv)}
-        persuasionCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(persuasionEt, isChecked, persuasion_tv)}
-        charismaSaveCb.setOnCheckedChangeListener{buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked)}
+        charismaEt.afterTextChanged { updateModifier(charismaEt) }
+        deceptionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(deceptionEt, isChecked, deception_tv) }
+        intimidationCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(intimidationEt, isChecked, intimidation_tv) }
+        performanceCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(performanceEt, isChecked, performance_tv) }
+        persuasionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(persuasionEt, isChecked, persuasion_tv) }
+        charismaSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked) }
 
         fun numberFormatCheck(editText: EditText): Int? {
             if (editText.text.isEmpty()) {
@@ -297,8 +296,8 @@ class CharacterCreatorActivity : AppCompatActivity() {
             }
         }
 
-        fun skillListCheck(skillList: MutableList<TextView?>) : MutableList<String?> {
-            var skillStringList = MutableList<String?>(0, {null})
+        fun skillListCheck(skillList: MutableList<TextView?>): MutableList<String?> {
+            var skillStringList = MutableList<String?>(0, { null })
 
             for (skill in skillList) {
                 skillStringList.add(skill?.text.toString())
@@ -324,7 +323,7 @@ class CharacterCreatorActivity : AppCompatActivity() {
             val characterMaxHitDice = numberFormatCheck(maxHitDiceEt)
             val characterHitDie = numberFormatCheck(hitDieEt)
             val characterArmorClass = numberFormatCheck(armorClassEt)
-            var trainedSkills : MutableList<String?> = skillListCheck(trainedSkills)
+            var trainedSkills: MutableList<String?> = skillListCheck(trainedSkills)
 
             val newCharacter = CharacterSheetData(characterName, characterPlayer, characterClass,
                     characterRace, characterSpeed, selectedAlignment, characterProficiencyBonus,
@@ -339,24 +338,9 @@ class CharacterCreatorActivity : AppCompatActivity() {
     }
 
     fun createCharacterFile(characterInfo: CharacterSheetData) {
-        val filename = characterInfo.name
-        val characterName = characterInfo.name
-        val fileContents = "name:$characterName"
-        this.openFileOutput(filename, Context.MODE_PRIVATE).use {
-            it.write(fileContents.toByteArray())
-        }
-
-//        val characterFileName = characterInfo.name + ".txt"
-//        val characterDirectory = File("/Characters/")
-//        characterDirectory.mkdirs()
-
-//        val characterDirectory = getDir("Characters", 0)
-//        val characterName = characterInfo.name
-//        val characterFile = File(characterDirectory, characterInfo.name)
-//        var characterContent = ""
-//        characterContent = "name:$characterName"
-//        var characterStream = FileOutputStream(characterFile, true)
-//        characterStream.write(characterContent.toByteArray())
+        val characterDirectory = getDir("Characters", 0)
+        val characterFile = File(characterDirectory, characterInfo.name)
+        ObjectOutputStream(FileOutputStream(characterFile)).use { it.writeObject(characterInfo) }
     }
 
 }

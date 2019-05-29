@@ -23,6 +23,9 @@
         <activity android:name=".CharacterCreatorActivity"
             android:parentActivityName=".CharacterListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".CharacterDetailActivity"
+                  android:parentActivityName=".CharacterListActivity"
+                  android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 
 </manifest>
