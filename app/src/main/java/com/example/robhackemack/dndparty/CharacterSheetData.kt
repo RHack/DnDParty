@@ -2,7 +2,7 @@ package com.example.robhackemack.dndparty
 
 import java.io.Serializable
 
-data class CharacterSheetData(val charName: String, val charPlayer: String? = null, var charClass: String? = null, var charRace: String? = null,
+data class CharacterSheetData(val charName: String? = null, val charPlayer: String? = null, var charClass: String? = null, var charRace: String? = null,
                               var charSpeed: Int? = null, var charAlignment: String? = null, var charProficiencyBonus: Int? = null, var charStr: Int? = null, var charDex: Int? = null,
                               var charCon: Int? = null, var charInt: Int? = null, var charWis: Int? = null,
                               var charCha: Int? = null, var charMaxHP: Int? = null, var charAC: Int? = null,
@@ -10,6 +10,12 @@ data class CharacterSheetData(val charName: String, val charPlayer: String? = nu
                               var charTrainedSkills: MutableList<String?>? = null,
                               var charSavingThrows: MutableList<String?>? = null, var charHP: Int? = null, var charTempHP: Int? = null,
                               var charInitiative: Int? = null, var charHitDice: Int? = null) : Serializable {
+
+    companion object {
+        private const val serialVersionUID: Long = 19
+        private const val waaat: Int = 1
+    }
+
     val name = charName
     val player = charPlayer
     var characterClass = charClass

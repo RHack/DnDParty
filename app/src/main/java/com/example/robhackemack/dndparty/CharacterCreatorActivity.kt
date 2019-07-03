@@ -289,10 +289,10 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         charismaSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked) }
 
         fun numberFormatCheck(editText: EditText): Int? {
-            if (editText.text.isEmpty()) {
-                return null
+            return if (editText.text.isEmpty()) {
+                null
             } else {
-                return editText.text.toString().toInt()
+                editText.text.toString().toInt()
             }
         }
 
@@ -337,7 +337,7 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         }
     }
 
-    fun createCharacterFile(characterInfo: CharacterSheetData) {
+    private fun createCharacterFile(characterInfo: CharacterSheetData) {
         val characterDirectory = getDir("Characters", 0)
         val characterFile = File(characterDirectory, characterInfo.name)
         ObjectOutputStream(FileOutputStream(characterFile)).use { it.writeObject(characterInfo) }

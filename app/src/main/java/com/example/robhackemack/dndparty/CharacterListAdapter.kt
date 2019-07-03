@@ -8,7 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.list_item_character.view.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.ObjectInputStream
 
 class CharacterListAdapter(val context: Context, val username: String?, val items: CharacterSheetDataList, val listener: (CharacterSheetData) -> Unit) :
         RecyclerView.Adapter<CharacterListAdapter.ViewHolder>() {
@@ -53,7 +57,20 @@ class CharacterListAdapter(val context: Context, val username: String?, val item
         val user = username
         fun bind(characterSheet: CharacterSheetData, listener: (CharacterSheetData) -> Unit) = with(viewItem) {
             characterNameTv.text = characterSheet.name
-            setOnClickListener { listener(characterSheet) }
+            setOnClickListener {
+                val characterDirectory = context.getDir("Characters", 0)
+                val characterFile = File(characterDirectory, characterSheet.name)
+
+                if (characterFile.exists()) {
+                    val characterInfo = ObjectInputStream(FileInputStream(characterFile)).use { it.readObject() } as CharacterSheetData
+
+                    val intent = Intent(context, CharacterDetailActivity::class.java)
+                    intent.putExtra("CharacterSheetData", characterInfo)
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "${characterSheet.name} Clicked", Toast.LENGTH_LONG).show()
+                }
+            }
         }
         fun bind() = with(viewItem) {
             setOnClickListener {

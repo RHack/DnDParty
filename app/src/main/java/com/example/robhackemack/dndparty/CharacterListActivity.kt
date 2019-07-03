@@ -22,9 +22,9 @@ class CharacterListActivity : AppCompatActivity() {
         character_list_rv.layoutManager = LinearLayoutManager(this)
         character_list_rv.adapter = CharacterListAdapter(this, username, characterSheets) {
             Toast.makeText(this, "${it.name} Clicked", Toast.LENGTH_LONG).show()
-            intent = Intent(this, CharacterDetailActivity::class.java)
-            intent.putExtra("CharacterSheetData", it)
-            startActivity(intent)
+//            intent = Intent(this, CharacterDetailActivity::class.java)
+//            intent.putExtra("CharacterSheetData", it)
+//            startActivity(intent)
         }
     }
 
