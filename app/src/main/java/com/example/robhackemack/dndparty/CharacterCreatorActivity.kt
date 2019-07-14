@@ -99,6 +99,7 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         val persuasionCb = findViewById<CheckBox>(R.id.persuasion_trained_cb)
 
         var trainedSkills = MutableList<TextView?>(0) { null }
+        var trainedSaves = MutableList<TextView?>(0) { null }
 
         val maxHitPointsEt = findViewById<EditText>(R.id.max_hit_points_et)
         val maxHitDiceEt = findViewById<EditText>(R.id.max_hit_dice_et)
@@ -108,6 +109,14 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         val createBtn = findViewById<Button>(R.id.create_character_btn)
 
         playerEt.setText(username, TextView.BufferType.EDITABLE)
+
+        var proficiencyBonus = 0
+        var strengthModifier = 0
+        var dexterityModifier = 0
+        var constitutionModifier = 0
+        var intelligenceModifier = 0
+        var wisdomModifier = 0
+        var charismaModifier = 0
 
         val alignmentAdapter = ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, alignments)
         var selectedAlignment: String? = null
@@ -138,10 +147,18 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         }
 
         fun signModifier(proficiencyModifier: Int): String {
-            if (proficiencyModifier < 0) {
-                return "$proficiencyModifier"
+            return if (proficiencyModifier < 0) {
+                "$proficiencyModifier"
             } else {
-                return "+$proficiencyModifier"
+                "+$proficiencyModifier"
+            }
+        }
+
+        fun updateProficiencyBonus() {
+            proficiencyBonus = if (proficiencyBonusEt.text.isEmpty()) {
+                0
+            } else {
+                proficiencyBonusEt.text.toString().toInt()
             }
         }
 
@@ -161,14 +178,38 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
             }
         }
 
-        fun checkedBox(proficiencyModifier: EditText, proficient: Boolean, skill: TextView? = null) {
+        fun trainSave(save: TextView?) {
+            if (!trainedSaves.contains(save)) {
+                trainedSaves.add(save)
+            } else {
+                Log.e("Save Train Error", "Save already trained")
+            }
+        }
+
+        fun untrainSave(save: TextView?) {
+            if (trainedSaves.contains(save)) {
+                trainedSaves.add(save)
+            } else {
+                Log.e("Save Train Error", "Save not trained yet")
+            }
+        }
+
+        fun checkedBox(proficiencyModifier: EditText, proficient: Boolean, skillOrSave: TextView? = null, savingThrow: Boolean? = null) {
             var proficiencyModifierNew = proficiencyModifier.text.toString().toInt()
             if (proficient) {
-                proficiencyModifierNew += 2
-                skill ?: trainSkill(skill)
+                proficiencyModifierNew += proficiencyBonus
+                if (savingThrow != null && savingThrow) {
+                    trainSave(skillOrSave)
+                } else {
+                    trainSkill(skillOrSave)
+                }
             } else {
-                proficiencyModifierNew -= 2
-                skill ?: untrainSkill(skill)
+                proficiencyModifierNew -= proficiencyBonus
+                if (savingThrow != null && savingThrow) {
+                    untrainSave(skillOrSave)
+                } else {
+                    untrainSkill(skillOrSave)
+                }
             }
             proficiencyModifier.setText(signModifier(proficiencyModifierNew))
         }
@@ -181,8 +222,8 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
                                       trainedBox: CheckBox) {
             var skillModifierNumber = abilityScoreModifierNumber
 
-            if (trainedBox.isChecked()) {
-                skillModifierNumber += 2
+            if (trainedBox.isChecked) {
+                skillModifierNumber += proficiencyBonus
             }
             skillModifier.setText(signModifier(skillModifierNumber))
         }
@@ -196,22 +237,21 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         }
 
         fun updateModifier(abilityScore: EditText) {
-            val abilityScoreModifierNumber: Int
-
-            if (abilityScore.text.isEmpty()) {
-                abilityScoreModifierNumber = 0
+            val abilityScoreModifierNumber: Int = if (abilityScore.text.isEmpty() || abilityScore == proficiencyBonusEt) {
+                0
             } else {
-                abilityScoreModifierNumber =
-                        calculateAbilityScoreModifier(abilityScore.text.toString().toInt())
+                calculateAbilityScoreModifier(abilityScore.text.toString().toInt())
             }
 
             when (abilityScore) {
                 strengthEt -> {
+                    strengthModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, strengthTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, athleticsEt, athleticsCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, strengthSaveEt, strengthSaveCb)
                 }
                 dexterityEt -> {
+                    dexterityModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, dexterityTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, acrobaticsEt, acrobaticsCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, sleightOfHandEt, sleightOfHandCb)
@@ -219,10 +259,12 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, dexteritySaveEt, dexteritySaveCb)
                 }
                 constitutionEt -> {
+                    constitutionModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, constitutionTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, constitutionSaveEt, constitutionSaveCb)
                 }
                 intelligenceEt -> {
+                    intelligenceModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, intelligenceTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, arcanaEt, arcanaCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, historyEt, historyCb)
@@ -232,6 +274,7 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, intelligenceSaveEt, intelligenceSaveCb)
                 }
                 wisdomEt -> {
+                    wisdomModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, wisdomTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, animalHandlingEt, animalHandlingCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, insightEt, insightCb)
@@ -241,6 +284,7 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, wisdomSaveEt, wisdomSaveCb)
                 }
                 charismaEt -> {
+                    charismaModifier = abilityScoreModifierNumber
                     updateAbilityScoreModifier(abilityScoreModifierNumber, charismaTv)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, deceptionEt, deceptionCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, intimidationEt, intimidationCb)
@@ -248,22 +292,57 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, persuasionEt, persuasionCb)
                     updateSkillOrSaveModifier(abilityScoreModifierNumber, charismaSaveEt, charismaSaveCb)
                 }
+                proficiencyBonusEt -> {
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + strengthModifier, athleticsEt, athleticsCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + strengthModifier, strengthSaveEt, strengthSaveCb)
 
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + dexterityModifier, acrobaticsEt, acrobaticsCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + dexterityModifier, sleightOfHandEt, sleightOfHandCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + dexterityModifier, stealthEt, stealthCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + dexterityModifier, dexteritySaveEt, dexteritySaveCb)
+
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + constitutionModifier, constitutionSaveEt, constitutionSaveCb)
+
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, arcanaEt, arcanaCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, historyEt, historyCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, investigationEt, investigationCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, natureEt, natureCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, religionEt, religionCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + intelligenceModifier, intelligenceSaveEt, intelligenceSaveCb)
+
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, animalHandlingEt, animalHandlingCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, insightEt, insightCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, medicineEt, medicineCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, perceptionEt, perceptionCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, survivalEt, survivalCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + wisdomModifier, wisdomSaveEt, wisdomSaveCb)
+
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + charismaModifier, deceptionEt, deceptionCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + charismaModifier, intimidationEt, intimidationCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + charismaModifier, performanceEt, performanceCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + charismaModifier, persuasionEt, persuasionCb)
+                    updateSkillOrSaveModifier(abilityScoreModifierNumber + charismaModifier, charismaSaveEt, charismaSaveCb)
+                }
             }
+        }
+
+        proficiencyBonusEt.afterTextChanged {
+            updateProficiencyBonus()
+            updateModifier(proficiencyBonusEt)
         }
 
         strengthEt.afterTextChanged { updateModifier(strengthEt) }
         athleticsCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(athleticsEt, isChecked, athletics_tv) }
-        strengthSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(strengthSaveEt, isChecked) }
+        strengthSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(strengthSaveEt, isChecked, strength_save_tv, true) }
 
         dexterityEt.afterTextChanged { updateModifier(dexterityEt) }
         acrobaticsCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(acrobaticsEt, isChecked, acrobatics_tv) }
         sleightOfHandCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(sleightOfHandEt, isChecked, sleight_of_hand_tv) }
         stealthCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(stealthEt, isChecked, stealth_tv) }
-        dexteritySaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(dexteritySaveEt, isChecked) }
+        dexteritySaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(dexteritySaveEt, isChecked, dexterity_save_tv, true) }
 
         constitutionEt.afterTextChanged { updateModifier(constitutionEt) }
-        constitutionSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(constitutionSaveEt, isChecked) }
+        constitutionSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(constitutionSaveEt, isChecked, constitution_save_tv, true) }
 
         intelligenceEt.afterTextChanged { updateModifier(intelligenceEt) }
         arcanaCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(arcanaEt, isChecked, arcana_tv) }
@@ -271,7 +350,7 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         investigationCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(investigationEt, isChecked, investigation_tv) }
         natureCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(natureEt, isChecked, nature_tv) }
         religionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(religionEt, isChecked, religion_tv) }
-        intelligenceSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(intelligenceSaveEt, isChecked) }
+        intelligenceSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(intelligenceSaveEt, isChecked, intelligence_save_tv, true) }
 
         wisdomEt.afterTextChanged { updateModifier(wisdomEt) }
         animalHandlingCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(animalHandlingEt, isChecked, animal_handling_tv) }
@@ -279,14 +358,14 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
         medicineCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(medicineEt, isChecked, medicine_tv) }
         perceptionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(perceptionEt, isChecked, perception_tv) }
         survivalCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(survivalEt, isChecked, survival_tv) }
-        wisdomSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(wisdomSaveEt, isChecked) }
+        wisdomSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(wisdomSaveEt, isChecked, wisdom_save_tv, true) }
 
         charismaEt.afterTextChanged { updateModifier(charismaEt) }
         deceptionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(deceptionEt, isChecked, deception_tv) }
         intimidationCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(intimidationEt, isChecked, intimidation_tv) }
         performanceCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(performanceEt, isChecked, performance_tv) }
         persuasionCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(persuasionEt, isChecked, persuasion_tv) }
-        charismaSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked) }
+        charismaSaveCb.setOnCheckedChangeListener { buttonView, isChecked -> checkedBox(charismaSaveEt, isChecked, charisma_save_tv, true) }
 
         fun numberFormatCheck(editText: EditText): Int? {
             return if (editText.text.isEmpty()) {
@@ -296,14 +375,14 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
             }
         }
 
-        fun skillListCheck(skillList: MutableList<TextView?>): MutableList<String?> {
-            var skillStringList = MutableList<String?>(0, { null })
+        fun skillOrSaveListCheck(skillOrSaveList: MutableList<TextView?>): MutableList<String?> {
+            var skillOrSaveStringList = MutableList<String?>(0) { null }
 
-            for (skill in skillList) {
-                skillStringList.add(skill?.text.toString())
+            for (skill in skillOrSaveList) {
+                skillOrSaveStringList.add(skill?.text.toString())
             }
 
-            return skillStringList
+            return skillOrSaveStringList
         }
 
         createBtn.setOnClickListener {
@@ -323,14 +402,15 @@ class CharacterCreatorActivity : AppCompatActivity(), Serializable {
             val characterMaxHitDice = numberFormatCheck(maxHitDiceEt)
             val characterHitDie = numberFormatCheck(hitDieEt)
             val characterArmorClass = numberFormatCheck(armorClassEt)
-            var trainedSkills: MutableList<String?> = skillListCheck(trainedSkills)
+            var trainedSkills: MutableList<String?> = skillOrSaveListCheck(trainedSkills)
+            var trainedSaves: MutableList<String?> = skillOrSaveListCheck(trainedSaves)
 
             val newCharacter = CharacterSheetData(characterName, characterPlayer, characterClass,
                     characterRace, characterSpeed, selectedAlignment, characterProficiencyBonus,
                     characterStrength, characterDexterity, characterConstitution,
                     characterIntelligence, characterWisdom, characterCharisma,
-                    characterMaxHitPoints, characterMaxHitDice, characterHitDie,
-                    characterArmorClass, trainedSkills)
+                    characterMaxHitPoints, characterArmorClass, characterMaxHitDice, characterHitDie,
+                    trainedSkills, trainedSaves)
             createCharacterFile(newCharacter)
             intent = Intent(this, CharacterListActivity::class.java)
             startActivity(intent)

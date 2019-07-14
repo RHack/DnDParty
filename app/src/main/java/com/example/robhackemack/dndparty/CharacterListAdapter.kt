@@ -63,7 +63,6 @@ class CharacterListAdapter(val context: Context, val username: String?, val item
 
                 if (characterFile.exists()) {
                     val characterInfo = ObjectInputStream(FileInputStream(characterFile)).use { it.readObject() } as CharacterSheetData
-
                     val intent = Intent(context, CharacterDetailActivity::class.java)
                     intent.putExtra("CharacterSheetData", characterInfo)
                     context.startActivity(intent)

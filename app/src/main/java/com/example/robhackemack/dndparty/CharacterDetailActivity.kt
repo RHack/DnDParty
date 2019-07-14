@@ -2,10 +2,11 @@ package com.example.robhackemack.dndparty
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_character_detail.*
+import org.w3c.dom.Text
 
 class CharacterDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +87,6 @@ class CharacterDetailActivity : AppCompatActivity() {
         val persuasionEt = findViewById<TextView>(R.id.persuasion_modifier_et)
         val persuasionCb = findViewById<CheckBox>(R.id.persuasion_trained_cb)
 
-        var trainedSkills = MutableList<TextView?>(0) { null }
 
         val maxHitPointsEt = findViewById<TextView>(R.id.max_hit_points_et)
         val maxHitDiceEt = findViewById<TextView>(R.id.max_hit_dice_et)
@@ -96,58 +96,45 @@ class CharacterDetailActivity : AppCompatActivity() {
         val createBtn = findViewById<Button>(R.id.create_character_btn)
 
         var characterSheet : CharacterSheetData = intent.getSerializableExtra("CharacterSheetData") as CharacterSheetData
+        val trainedSkills = characterSheet.trainedSkills
 
 
         fun signModifier(proficiencyModifier: Int): String {
-            if (proficiencyModifier < 0) {
-                return "$proficiencyModifier"
+            return if (proficiencyModifier < 0) {
+                "$proficiencyModifier"
             } else {
-                return "+$proficiencyModifier"
+                "+$proficiencyModifier"
             }
         }
 
-        fun trainSkill(skill: TextView?) {
-            if (!trainedSkills.contains(skill)) {
-                trainedSkills.add(skill)
+        fun nullCheck(item: Any?): Boolean {
+            if (item is TextView?) {
+                return item != null && item.text.toString() != "null" && item.text.toString() != ""
+            }
+            return item != null
+        }
+
+        fun calculateAbilityScoreModifier(abilityScore: TextView?): Int {
+            return if (nullCheck(abilityScore)) {
+                (abilityScore?.text.toString().toInt() - 10) / 2
             } else {
-                Log.e("Skill Train Error", "Skill already trained")
+                0
             }
         }
 
-        fun untrainSkill(skill: TextView?) {
-            if (trainedSkills.contains(skill)) {
-                trainedSkills.add(skill)
-            } else {
-                Log.e("Skill Train Error", "Skill not trained yet")
-            }
-        }
-
-        fun trainSkills(currentSkill: String) {
-            for(skill in trainedSkills) {
-                if (currentSkill == skill.toString()) {
-
+        fun isTrained(skillOrSave: TextView, skillOrSaveList: MutableList<String?>?): Boolean {
+            if (skillOrSaveList == null) {
+                return false
+            } else if (skillOrSaveList.isNotEmpty()) {
+                if (skillOrSaveList.contains(skillOrSave.text)) {
+                    return true
                 }
             }
-        }
-
-        fun checkedBox(proficiencyModifier: TextView, proficient: Boolean, skill: TextView? = null) {
-            var proficiencyModifierNew = proficiencyModifier.text.toString().toInt()
-            if (proficient) {
-                proficiencyModifierNew += 2
-                skill ?: trainSkill(skill)
-            } else {
-                proficiencyModifierNew -= 2
-                skill ?: untrainSkill(skill)
-            }
-            proficiencyModifier.setText(signModifier(proficiencyModifierNew))
-        }
-
-        fun calculateAbilityScoreModifier(abilityScore: Int): Int {
-            return (abilityScore - 10) / 2
+            return false
         }
 
         fun updateAbilityScoreModifier(abilityScoreModifierNumber: Int, abilityScoreModifier: TextView) {
-            if(abilityScoreModifier == null) {
+            if (abilityScoreModifier == null) {
                 abilityScoreModifier
             }
             if (abilityScoreModifierNumber < 0) {
@@ -157,75 +144,113 @@ class CharacterDetailActivity : AppCompatActivity() {
             }
         }
 
-        fun updateSkillOrSaveModifier(abilityScoreModifierNumber: Int, skillModifier: TextView,
-                                      trainedBox: CheckBox) {
+        fun updateSkillModifier(abilityScoreModifierNumber: Int, skillModifier: TextView,
+                                skill: TextView, trainedBox: CheckBox) {
             var skillModifierNumber = abilityScoreModifierNumber
 
-            if (trainedBox.isChecked()) {
-                skillModifierNumber += 2
+            if (isTrained(skill, characterSheet.trainedSkills)) {
+                trainedBox.isChecked = true
+                skillModifierNumber += proficiencyBonusEt.text.toString().toInt()
             }
-            skillModifier.setText(signModifier(skillModifierNumber))
+            skillModifier.text = signModifier(skillModifierNumber)
+        }
+
+        fun updateSaveModifier(abilityScoreModifierNumber: Int, saveModifier: TextView,
+                                save: TextView, trainedBox: CheckBox) {
+            var saveModifierNumber = abilityScoreModifierNumber
+
+            if (isTrained(save, characterSheet.savingThrows)) {
+                trainedBox.isChecked = true
+                saveModifierNumber += proficiencyBonusEt.text.toString().toInt()
+            }
+            saveModifier.text = signModifier(saveModifierNumber)
         }
 
         fun updateModifier(abilityScore: TextView) {
-            val abilityScoreModifierNumber: Int
-
-            if (abilityScore.text.isEmpty()) {
-                abilityScoreModifierNumber = 0
-            } else {
-                abilityScoreModifierNumber =
-                        calculateAbilityScoreModifier(abilityScore.text.toString().toInt())
-            }
+            val abilityScoreModifierNumber: Int = calculateAbilityScoreModifier(abilityScore)
 
             when (abilityScore) {
+
                 strengthEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, strengthTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, athleticsEt, athleticsCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, strengthSaveEt, strengthSaveCb)
+                    updateSkillModifier(abilityScoreModifierNumber, athleticsEt, athletics_tv, athleticsCb)
+                    updateSaveModifier(abilityScoreModifierNumber, strengthSaveEt, strength_save_tv, strengthSaveCb)
                 }
                 dexterityEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, dexterityTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, acrobaticsEt, acrobaticsCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, sleightOfHandEt, sleightOfHandCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, stealthEt, stealthCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, dexteritySaveEt, dexteritySaveCb)
+                    updateSkillModifier(abilityScoreModifierNumber, acrobaticsEt, acrobatics_tv, acrobaticsCb)
+                    updateSkillModifier(abilityScoreModifierNumber, sleightOfHandEt, sleight_of_hand_tv, sleightOfHandCb)
+                    updateSkillModifier(abilityScoreModifierNumber, stealthEt, stealth_tv, stealthCb)
+                    updateSaveModifier(abilityScoreModifierNumber, dexteritySaveEt, dexterity_save_tv, dexteritySaveCb)
                 }
                 constitutionEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, constitutionTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, constitutionSaveEt, constitutionSaveCb)
+                    updateSaveModifier(abilityScoreModifierNumber, constitutionSaveEt, constitution_save_tv, constitutionSaveCb)
                 }
                 intelligenceEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, intelligenceTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, arcanaEt, arcanaCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, historyEt, historyCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, investigationEt, investigationCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, natureEt, natureCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, religionEt, religionCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, intelligenceSaveEt, intelligenceSaveCb)
+                    updateSkillModifier(abilityScoreModifierNumber, arcanaEt, arcana_tv, arcanaCb)
+                    updateSkillModifier(abilityScoreModifierNumber, historyEt, history_tv, historyCb)
+                    updateSkillModifier(abilityScoreModifierNumber, investigationEt, investigation_tv, investigationCb)
+                    updateSkillModifier(abilityScoreModifierNumber, natureEt, nature_tv, natureCb)
+                    updateSkillModifier(abilityScoreModifierNumber, religionEt, religion_tv, religionCb)
+                    updateSaveModifier(abilityScoreModifierNumber, intelligenceSaveEt, intelligence_save_tv, intelligenceSaveCb)
                 }
                 wisdomEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, wisdomTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, animalHandlingEt, animalHandlingCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, insightEt, insightCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, medicineEt, medicineCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, perceptionEt, perceptionCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, survivalEt, survivalCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, wisdomSaveEt, wisdomSaveCb)
+                    updateSkillModifier(abilityScoreModifierNumber, animalHandlingEt, animal_handling_tv, animalHandlingCb)
+                    updateSkillModifier(abilityScoreModifierNumber, insightEt, insight_tv, insightCb)
+                    updateSkillModifier(abilityScoreModifierNumber, medicineEt, medicine_tv, medicineCb)
+                    updateSkillModifier(abilityScoreModifierNumber, perceptionEt, perception_tv, perceptionCb)
+                    updateSkillModifier(abilityScoreModifierNumber, survivalEt, survival_tv, survivalCb)
+                    updateSaveModifier(abilityScoreModifierNumber, wisdomSaveEt, wisdom_save_tv, wisdomSaveCb)
                 }
                 charismaEt -> {
                     updateAbilityScoreModifier(abilityScoreModifierNumber, charismaTv)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, deceptionEt, deceptionCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, intimidationEt, intimidationCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, performanceEt, performanceCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, persuasionEt, persuasionCb)
-                    updateSkillOrSaveModifier(abilityScoreModifierNumber, charismaSaveEt, charismaSaveCb)
+                    updateSkillModifier(abilityScoreModifierNumber, deceptionEt, deception_tv, deceptionCb)
+                    updateSkillModifier(abilityScoreModifierNumber, intimidationEt, intimidation_tv, intimidationCb)
+                    updateSkillModifier(abilityScoreModifierNumber, performanceEt, performance_tv, performanceCb)
+                    updateSkillModifier(abilityScoreModifierNumber, persuasionEt, persuasion_tv, persuasionCb)
+                    updateSaveModifier(abilityScoreModifierNumber, charismaSaveEt, charisma_save_tv, charismaSaveCb)
                 }
-
             }
         }
 
         nameEt.text = characterSheet.name
+        playerEt.text = characterSheet.player
+        classEt.text = characterSheet.characterClass
+        raceEt.text = characterSheet.race
+        alignmentEt.text = characterSheet.alignment
+
+        hit_points_et.text =
+                if (nullCheck(hit_points_et) ) {
+                    characterSheet.hitPoints.toString()
+                } else {
+                    characterSheet.maxHitPoints.toString()
+                }
+        max_hit_points_et.text = characterSheet.maxHitPoints.toString()
+        armorClassEt.text = characterSheet.armorClass.toString()
+        proficiencyBonusEt.text = characterSheet.proficiencyBonus.toString()
+        maxHitDiceEt.text =
+                if (nullCheck(maxHitDiceEt)) {
+                    characterSheet.hitDice.toString()
+                } else {
+                    characterSheet.maxHitDice.toString()
+                }
+        hitDieEt.text = characterSheet.maxHitDice.toString()
+        speedEt.text = characterSheet.speed.toString()
+
         strengthEt.text = characterSheet.strength.toString()
+        updateModifier(strengthEt)
         dexterityEt.text = characterSheet.dexterity.toString()
+        updateModifier(dexterityEt)
+        constitutionEt.text = characterSheet.constitution.toString()
+        updateModifier(constitutionEt)
+        intelligenceEt.text = characterSheet.intelligence.toString()
+        updateModifier(intelligenceEt)
+        wisdomEt.text = characterSheet.wisdom.toString()
+        updateModifier(wisdomEt)
+        charismaEt.text = characterSheet.charisma.toString()
+        updateModifier(charismaEt)
     }
 }
